@@ -1,0 +1,17 @@
+# Build and debug folders
+bin/
+obj/
+
+# VS and Rider settings
+*.user
+*.suo
+.idea/
+.vscode/
+
+# Logs and databases
+*.log
+*.db
+
+# OS files
+Thumbs.db
+.DS_Store
