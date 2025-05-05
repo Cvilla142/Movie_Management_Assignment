@@ -58,13 +58,17 @@ public class MovieManager
 
     public void SortByTitle()
     {
+        var sorted = MovieSorter.BubbleSortByTitle(_movies);
+        _movies = new LinkedList<Movie>(sorted);
     }
-    
 
     public void SortByReleaseYear();
     {
-
+        var sorted = MovieSorter.InsertionSortByYear(_movies);
+        _movies = new LinkedList<Movie>(sorted);
     }
+
+
 
     public void BorrowMovie(string movieID, string userID) 
     {         
