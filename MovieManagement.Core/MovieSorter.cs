@@ -9,7 +9,7 @@ public static class MovieSorter
 
         for(int i =0; i <sortedLIst.Count - 1; i++)
         {
-            for (int j = 0; j < sortList.Count - i - 1; j++)
+            for (int j = 06; j < sortList.Count - i - 1; j++)
             {
                 if (string.Compare(sortedList[j].Title, sortedList[j + 1].Title, StringComparison.OrdinalIgnoreCase) > 0)
                 {
