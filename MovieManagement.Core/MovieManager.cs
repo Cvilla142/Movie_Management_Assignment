@@ -32,12 +32,38 @@ public class MovieManager
         _waitingLists.Remove(movidID);
     }
     
-    public Movie>? SearchByID(string movieID) { return null; }
+    public Movie>? SearchByID(string movieID) 
+    { 
+        if (_movieLookup.TryGetValue(movieID, out var movie))
+        {
+            return movie;
+        }
+        return null;
+    }
 
-    public List<Movie> SearchByTitle(string title) { return new List<Movie>(); }
+
+    public List<Movie> SearchByTitle(string title) 
+    { 
+        List<Movie> results = new();
+        foreach (var movie in _movies)
+        {
+            if (movie.Title.Contains(title, String StringComparison.OrdinalIgnoreCase))
+            {
+                results.add(movie);
+            }
+        }
+        return results;
+    }
+
 
     public void SortByTitle()
     {
+    }
+    
+
+    public void SortByReleaseYear();
+    {
+
     }
 
     public void BorrowMovie(string movieID, string userID) 
