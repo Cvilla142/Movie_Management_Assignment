@@ -36,9 +36,7 @@ namespace MovieManagement.Core
         {
             var movie = _movieManager.SearchByID(movieId);
             if (movie == null)
-            {
-                throw new KeyNotFoundException("Movie not found.");
-            }
+                throw new KeyNotFoundException($"Movie with ID '{movieId} not found.");
 
             User? nextUser = _movieManager.DequeueNextWaitingUser(movieId);
 
