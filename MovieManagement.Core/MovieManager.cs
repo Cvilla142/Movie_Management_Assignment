@@ -69,13 +69,23 @@ public class MovieManager
     }
 
 
+    public void EnqueueWaitingUser(string movieId, string userId)
+    {
+        if (!_waitingLists.ContainsKey(movieId))
+        {
+            _waitingLists[MovieId] = new Queue<string>();
+        }
 
-    public void BorrowMovie(string movieID, string userID) 
-    {         
+        _waitingLists[movieId].Enqueue(userId)
     }
 
-    public void ReturnMovie(string filepath)
-    {        
+    public string? DequeueNextWaitingUser(string movieId)
+    {
+        if (_waitingLists.ContainsKey(movieId) && _waitingLists[movieId].Count > 0)
+        {
+            return _waitingLists[movieId].Dequeue();
+        }
+        return null;
     }
 
     public void ExportToJson(string filepath)
