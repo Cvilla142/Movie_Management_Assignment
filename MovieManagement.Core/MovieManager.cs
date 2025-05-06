@@ -4,7 +4,7 @@ public class MovieManager
 {
     private LinkedList<Movie> _movies = new();
     private Dictionary<string, Movie> _movieLookup = new();
-    private Dictionary<string, Queue<string>> _waitingLists = new();
+    private Dictionary<string, Queue<User>> _waitingLists = new();
 
     public bool AddMovie(Movie movie) 
     {
@@ -65,17 +65,17 @@ public class MovieManager
         _movies = new LinkedList<Movie>(sorted);
     }
 
-    public void EnqueueWaitingUser(string movieId, string userId)
+    public void EnqueueWaitingUser(string movieId, User user)
     {
         if (!_waitingLists.ContainsKey(movieId))
         {
-            _waitingLists[movieId] = new Queue<string>();
+            _waitingLists[movieId] = new Queue<User>();
         }
 
-        _waitingLists[movieId].Enqueue(userId);
+        _waitingLists[movieId].Enqueue(user);
     }
 
-    public string? DequeueNextWaitingUser(string movieId)
+    public User? DequeueNextWaitingUser(string movieId)
     {
         if (_waitingLists.ContainsKey(movieId) && _waitingLists[movieId].Count > 0)
         {

@@ -1,42 +1,57 @@
-using system   
-using System.Collections.Generic;
+using System;
+using MovieManagement.Core;
 
-public class MovieBorrower
+namespace MovieManagement.Core
 {
-    private readonly MovieManager _movieManager;
-
-    public MovieBorrower(MovieManager _movieManager)
+    public class MovieBorrower
     {
-        _movieManager = _movieManager;
+        private readonly MovieManager _movieManager;
+
+        public MovieBorrower(MovieManager movieManager)
+        {
+            _movieManager = movieManager;
+        }
+
+        public void BorrowMovie(string movieId, string userId)
+        {
+            var movie = _movieManager.SearchByID(movieId);
+            if (movie == null)
+            {
+                throw new KeyNotFoundException("Movie not found.");
+            }
+
+            if (movie.IsAvailable)
+            {
+                movie.IsAvailable = false;
+                Console.WriteLine($"Movie '{movie.Title}' has been borrowed by user {userId}.");
+            }
+            else
+            {
+                _movieManager.EnqueueWaitingUser(movieId, userId);
+                Console.WriteLine($"Movie '{movie.Title}' is not available. User {userId} has been added to the waiting list.");
+            }
+        }
+
+        public void ReturnMovie(string movieId)
+        {
+            var movie = _movieManager.SearchByID(movieId);
+            if (movie == null)
+            {
+                throw new KeyNotFoundException("Movie not found.");
+            }
+
+            string? nextUser = _movieManager.DequeueNextWaitingUser(movieId);
+
+            if (nextUser != null)
+            {
+                Console.WriteLine($"Movie '{movie.Title}' is now borrowed by next user in queue: {nextUser}.");
+                // Still marked as unavailable because it goes to next user
+            }
+            else
+            {
+                movie.IsAvailable = true;
+                Console.WriteLine($"Movie '{movie.Title}' has been returned and is now available.");
+            }
+        }
     }
-
-    public bool BorrowMovie(string movieId, string userId)
-    {
-        var movie = _movieManager.searchById(movieId);
-        if (movie == null) return false;
-
-        if (movie.IsAvailable)
-        {
-            movie.IsAvailable = false;
-            return true;
-        }
-        else 
-        {
-            _movieManager.EnqueueWaitingUser(movieId, userId);
-            return false;
-        }
-
-        var nextUser = _movieManager.DeQueueNextWaitingUser(movieId);
-        if (nextUser != null)
-        {
-            assignedTo = nextUser;
-        }
-        else 
-        {
-            movie.IsAvailable = true;
-        }
-        return true;
-    }
-
-
 }

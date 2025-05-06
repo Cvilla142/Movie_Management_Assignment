@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace MovieManagement.Core;
+
 public static class MovieSorter
 {
     public static List<Movie> BubbleSortByTitle(IEnumerable<Movie> movies)
