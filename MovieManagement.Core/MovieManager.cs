@@ -15,7 +15,7 @@ public class MovieManager
         }
         _movies.AddLast(movie);
         _movieLookup[movie.MovieId] = movie;
-        _waitingLists[movie.MovieId] = new Queue<string>();
+        _waitingLists[movie.MovieId] = new Queue<User>(); 
         Console.WriteLine("Movie was added");
         return true;
     }

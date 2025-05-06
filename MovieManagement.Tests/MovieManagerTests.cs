@@ -9,7 +9,7 @@ namespace MovieManagement.Tests
         public void AddMovie_ShoudlAddMovieSuccesssfully()
         {
             var manager = new MovieManager();
-            var movie = new Movie { MovieId = "M1", Title = "Inception", IsAvailable = true }:
+            var movie = new Movie { MovieId = "M1", Title = "Inception", IsAvailable = true };
 
 
             manager.AddMovie(movie);

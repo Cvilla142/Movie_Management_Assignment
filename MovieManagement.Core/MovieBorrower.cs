@@ -12,7 +12,7 @@ namespace MovieManagement.Core
             _movieManager = movieManager;
         }
 
-        public void BorrowMovie(string movieId, string userId)
+        public void BorrowMovie(string movieId, User user)
         {
             var movie = _movieManager.SearchByID(movieId);
             if (movie == null)
@@ -23,12 +23,12 @@ namespace MovieManagement.Core
             if (movie.IsAvailable)
             {
                 movie.IsAvailable = false;
-                Console.WriteLine($"Movie '{movie.Title}' has been borrowed by user {userId}.");
+                Console.WriteLine($"Movie '{movie.Title}' has been borrowed by user {user.Name}.");
             }
             else
             {
-                _movieManager.EnqueueWaitingUser(movieId, userId);
-                Console.WriteLine($"Movie '{movie.Title}' is not available. User {userId} has been added to the waiting list.");
+                _movieManager.EnqueueWaitingUser(movieId, user);
+                Console.WriteLine($"Movie '{movie.Title}' is not available. User {user.Name} has been added to the waiting list.");
             }
         }
 
@@ -40,11 +40,11 @@ namespace MovieManagement.Core
                 throw new KeyNotFoundException("Movie not found.");
             }
 
-            string? nextUser = _movieManager.DequeueNextWaitingUser(movieId);
+            User? nextUser = _movieManager.DequeueNextWaitingUser(movieId);
 
             if (nextUser != null)
             {
-                Console.WriteLine($"Movie '{movie.Title}' is now borrowed by next user in queue: {nextUser}.");
+                Console.WriteLine($"Movie '{movie.Title}' is now borrowed by next user in queue: {nextUser.Name}.");
                 // Still marked as unavailable because it goes to next user
             }
             else
