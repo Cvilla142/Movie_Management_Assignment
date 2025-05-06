@@ -1,3 +1,7 @@
+using System.IO;
+using System.Text.Json;
+using System.Collections.Generic;
+
 namespace MovieManagement.Core;
 
 public class MovieManager
@@ -83,12 +87,82 @@ public class MovieManager
 
     public void ExportToJson(string filepath)
     {
-        // Implementation placeholder
+
+        var exportModel = _movies.Select(m => new
+        {
+        m.MovieId,
+        m.Title,
+        m.Director,
+        m.Genre,
+        m.ReleaseYear,
+        m.IsAvailable,
+        WaitingQueue = _waitingLists.ContainsKey(m.MovieId)
+            ? _waitingLists[m.MovieId].Select(u => u.UserId).ToList()
+            : new List<string>()
+        }).ToList();
+
+        var options = new JsonSerializerOptions { WriteIndented = true };  
+        string json = JsonSerializer.Serialize(exportModel, options);
+
+        File.WriteAllText(filepath, json);
     }
 
-    public void ImportFromJson(string filepath)
+    public void ImportFromJson(string filePath)
     {
-        // Implementation placeholder
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"Import file not found: {filePath}");
+
+        string json = File.ReadAllText(filePath);
+
+        var imported = JsonSerializer.Deserialize<List<ImportModel>>(json);
+        if (imported == null)
+        {
+            imported = new List<ImportModel>();
+        }
+
+
+        _movies.Clear();
+        _movieLookup.Clear();
+        _waitingLists.Clear();
+
+
+        foreach (var entry in imported)
+        {
+
+            var mv = new Movie(
+                entry.MovieId,
+                entry.Title,
+                entry.Director,
+                entry.Genre,
+                entry.ReleaseYear
+            )
+            {
+                IsAvailable = entry.IsAvailable
+            };
+
+
+            AddMovie(mv);
+
+
+            foreach (var userId in entry.WaitingQueue)
+            {
+                _waitingLists[mv.MovieId].Enqueue(
+                    new User(userId, userId, DateTime.MinValue)
+                );
+            }
+        }
+    }
+
+
+    private class ImportModel
+    {
+        public string MovieId     { get; set; } = "";
+        public string Title       { get; set; } = "";
+        public string Director    { get; set; } = "";
+        public string Genre       { get; set; } = "";
+        public int    ReleaseYear { get; set; }
+        public bool   IsAvailable { get; set; }
+        public List<string> WaitingQueue { get; set; } = new();
     }
 
     public IEnumerable<Movie> GetAllMovies()

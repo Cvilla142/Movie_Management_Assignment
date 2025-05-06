@@ -1,4 +1,10 @@
-﻿namespace MovieManagement.Core;
+﻿using System.IO;
+using System.Linq;
+using System.Text.Json;
+
+
+namespace MovieManagement.Core;
+
 
 public class Movie
 {
