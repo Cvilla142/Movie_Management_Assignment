@@ -1,3 +1,8 @@
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+
+
 namespace MovieManagement.Core;
 
 public class User
