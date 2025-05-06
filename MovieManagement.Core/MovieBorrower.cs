@@ -1,5 +1,7 @@
-using system   
+namespace MovieManagement.Core;
+using system;   
 using System.Collections.Generic;
+
 
 public class MovieBorrower
 {
