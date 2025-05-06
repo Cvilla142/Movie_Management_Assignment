@@ -86,5 +86,29 @@ namespace MovieManagement.Tests
             Assert.Null(manager.DequeueNextWaitingUser("L1"));
         }
 
+        [Fact]
+            public void ReturnMovie_WhenQueueNotEmpty_MarksAvailable()
+            {
+                var manager = new MovieManager();
+                var movie = new Movie
+                {
+                    MovieId     = "L7",
+                    Title       = "Back for blood",
+                    Director    = "Christian",
+                    Genre       = "Action",
+                    ReleaseYear = 2021
+                };
+
+                manager.AddMovie(movie);
+
+                var borrower = new MovieBorrower(manager);
+                var user = new User("I1", "Kenton", DateTime.Now);
+
+                borrower.BorrowMovie("L7", user);
+
+                borrower.ReturnMovie("L7");
+
+                Assert.True(movie.IsAvailable);
+            }
     }
 }
