@@ -9,14 +9,11 @@ public class MovieManager
     public bool AddMovie(Movie movie) 
     {
         if (_movieLookup.ContainsKey(movie.MovieId))
-        {
-            Console.WriteLine("A movie with this ID already exists.");
-            return false;
-        }
+            throw new InvalidOperationException("A movie witht his ID already exists.");
+
         _movies.AddLast(movie);
         _movieLookup[movie.MovieId] = movie;
         _waitingLists[movie.MovieId] = new Queue<User>(); 
-        Console.WriteLine("Movie was added");
         return true;
     }
 

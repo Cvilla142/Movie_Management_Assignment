@@ -9,6 +9,8 @@ public class Movie
     public int ReleaseYear { get; set; }
     public bool IsAvailable { get; set; } = true;
 
+    public Movie() { }
+
     public Movie(string movieId, string title, string director, string genre, int releaseYear)
     {
         MovieId = movieId;

@@ -15,7 +15,7 @@ namespace MovieManagement.Tests
             manager.AddMovie(movie);
             var result = manager.SearchByID("M1");
 
-            Assert.NotNUll(result);
+            Assert.NotNull(result);
             Assert.Equal("Inception", result?.Title);
         }
         
