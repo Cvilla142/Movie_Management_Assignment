@@ -10,7 +10,7 @@ public class MovieBorrower
         _movieManager = _movieManager;
     }
 
-    public bool BorrowMoive(string movieId, string userId)
+    public bool BorrowMovie(string movieId, string userId)
     {
         var movie = _movieManager.searchById(movieId);
         if (movie == null) return false;
