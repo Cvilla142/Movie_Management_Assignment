@@ -1,8 +1,7 @@
-namespace MovieManagement.Core;
 using System;
 using System.Collections.Generic;
 
-
+namespace MovieManagement.Core;
 
 public static class MovieSorter
 {
