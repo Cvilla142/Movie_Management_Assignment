@@ -9,7 +9,15 @@ public class Movie
     public int ReleaseYear { get; set; }
     public bool IsAvailable { get; set; } = true;
 
-    public Movie() { }
+    public Movie() 
+    { 
+        MovieId = "";
+        Title = "";
+        Director = "";
+        Genre = "";
+        ReleaseYear = 0;
+
+    }
 
     public Movie(string movieId, string title, string director, string genre, int releaseYear)
     {
