@@ -1,55 +1,48 @@
-using System;
 using System.Collections.Generic;
+using MovieManagement.Core;
 
-namespace MovieManagement.Core;
-
-public static class MovieSorter
+namespace MovieManagement.Core
 {
-    public static List<Movie> BubbleSortByTitle(IEnumerable<Movie> movies)
+    public static class MovieSorter
     {
-        List<Movie> sortedList = new(movies);
-
-        for(int i =0; i <sortedLIst.Count - 1; i++)
+        public static IList<Movie> BubbleSortByTitle(IEnumerable<Movie> movies)
         {
-            for (int j = 06; j < sortList.Count - i - 1; j++)
+            var sortedList = new List<Movie>(movies);
+            int n = sortedList.Count;
+
+            for (int i = 0; i < n - 1; i++)
             {
-                if (string.Compare(sortedList[j].Title, sortedList[j + 1].Title, StringComparison.OrdinalIgnoreCase) > 0)
+                for (int j = 0; j < n - i - 1; j++)
                 {
-                    var temp = sortedList[j];
-                    sortedList[j] = sortedList[j + 1];
-                    sortedList[j + 1] = temp;
+                    if (string.Compare(sortedList[j].Title, sortedList[j + 1].Title, true) > 0)
+                    {
+                        (sortedList[j], sortedList[j + 1]) = (sortedList[j + 1], sortedList[j]);
+                    }
                 }
             }
+
+            return sortedList;
+        }
+
+        public static IList<Movie> InsertionSortByYear(IEnumerable<Movie> movies)
+        {
+            var sortedList = new List<Movie>(movies);
+
+            for (int i = 1; i < sortedList.Count; i++)
+            {
+                var key = sortedList[i];
+                int j = i - 1;
+
+                while (j >= 0 && sortedList[j].ReleaseYear > key.ReleaseYear)
+                {
+                    sortedList[j + 1] = sortedList[j];
+                    j--;
+                }
+
+                sortedList[j + 1] = key;
+            }
+
+            return sortedList;
         }
     }
-
-    return sortedList;
-
-    public static List<Movie> InsertionSortByYear(IEnumerable<Movie> movies)
-    {
-        List<Movie> sortedLIst = new(movies);
-
-        for (int i  1; i < sortList.Count; i++)
-        {
-            movie key = sortList[i];
-            int j = i - 1;
-            
-            while (j >= 0 && sortedList[j].ReleaseYear > key.ReleaseYear)
-            {
-                sortedList[j + 1 ] = sortedList[j];
-                j--;
-            } 
-            sortedList[j + 1] = key;
-        }
-        return sortList;
-    }   
-
-
-
-
-
-
-
-
-
 }
