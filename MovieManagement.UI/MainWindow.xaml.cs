@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Linq;
 using Microsoft.Win32;
 using MovieManagement.Core;
 
@@ -24,8 +25,8 @@ namespace MovieManagement.UI
 
         private void RefreshGrid()
         {
-            MoviesGrid.ItemsSource = null;
-            MoviesGrid.ItemsSource = _manager.GetAllMovies();
+        MoviesGrid.ItemsSource = null;
+        MoviesGrid.ItemsSource = _manager.GetAllMovies().ToList();
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
