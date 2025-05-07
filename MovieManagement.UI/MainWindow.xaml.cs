@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Windows;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using Microsoft.Win32;
 using MovieManagement.Core;
 
@@ -16,17 +17,13 @@ namespace MovieManagement.UI
             InitializeComponent();
             _borrower = new MovieBorrower(_manager);
 
-            // (Optional) seed a couple movies so list isn't empty on start
-            //_manager.AddMovie(new Movie("M1","Inception","Nolan","Sci-Fi",2010));
-            //_manager.AddMovie(new Movie("M2","Matrix","Wachowski","Sci-Fi",1999));
-
             RefreshGrid();
         }
 
         private void RefreshGrid()
         {
-        MoviesGrid.ItemsSource = null;
-        MoviesGrid.ItemsSource = _manager.GetAllMovies().ToList();
+            MoviesGrid.ItemsSource = null;
+            MoviesGrid.ItemsSource = _manager.GetAllMovies().ToList();
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
@@ -119,13 +116,11 @@ namespace MovieManagement.UI
             BorrowUserBox.Clear();
         }
 
-        private void Return_Click(object sender, RoutedEventArgs e)
+        // This method centralizes the return logic for both button click and Enter key.
+        private void HandleReturn(string movieId)
         {
-            var movieId = BorrowIdBox.Text.Trim();
-
             try
             {
-                // Call the updated ReturnMovie which returns the next waiting user (if any)
                 var nextUser = _borrower.ReturnMovie(movieId);
                 RefreshGrid();
 
@@ -157,8 +152,43 @@ namespace MovieManagement.UI
                     MessageBoxImage.Error
                 );
             }
+        }
 
-            // Clear inputs
+        // Wire this up in XAML: KeyDown="MoviesGrid_KeyDown"
+        private void MoviesGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return && MoviesGrid.SelectedItem is Movie selected)
+            {
+                HandleReturn(selected.MovieId);
+            }
+        }
+
+        private void Return_Click(object sender, RoutedEventArgs e)
+        {
+            // 1) Determine which Movie ID to use:
+            var movieId = BorrowIdBox.Text.Trim();
+            if (string.IsNullOrEmpty(movieId))
+            {
+                if (MoviesGrid.SelectedItem is Movie sel)
+                {
+                    movieId = sel.MovieId;
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Please select a movie in the list or type its ID.",
+                        "No Movie Selected",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
+            }
+
+            // 2) Call the shared logic
+            HandleReturn(movieId);
+
+            // 3) Clear the input box
             BorrowIdBox.Clear();
             BorrowUserBox.Clear();
         }
