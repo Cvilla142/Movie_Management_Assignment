@@ -38,17 +38,17 @@ namespace MovieManagement.Core
             var movie = _movieManager.SearchByID(movieId)
                         ?? throw new KeyNotFoundException($"Movie with ID '{movieId}' not found.");
 
-            // Dequeue next waiting user, if any
+
             var nextUser = _movieManager.DequeueNextWaitingUser(movieId);
             if (nextUser != null)
             {
-                // Immediately assign to them
+
                 movie.IsAvailable = false;
                 return nextUser;
             }
             else
             {
-                // No one waiting → mark available
+
                 movie.IsAvailable = true;
                 return null;
             }

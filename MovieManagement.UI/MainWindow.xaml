@@ -3,15 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Movie Manager" Height="600" Width="800">
   <Grid Margin="10">
-    <!-- 4 rows: Add, Search, Borrow, List -->
+
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/> <!-- Row 0: Add Movie -->
-      <RowDefinition Height="Auto"/> <!-- Row 1: Search/Sort/Import/Export -->
-      <RowDefinition Height="Auto"/> <!-- Row 2: Borrow/Return -->
-      <RowDefinition/>               <!-- Row 3: DataGrid -->
+      <RowDefinition Height="Auto"/> 
+      <RowDefinition Height="Auto"/> 
+      <RowDefinition Height="Auto"/> 
+      <RowDefinition/>               
     </Grid.RowDefinitions>
 
-    <!-- Row 0: Add Movie -->
+
     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
       <StackPanel Orientation="Vertical" Margin="0,0,10,0">
         <TextBlock Text="Movie ID" FontWeight="Bold"/>
@@ -36,7 +36,7 @@
       <Button Content="Add" Click="Add_Click" Width="60" VerticalAlignment="Bottom"/>
     </StackPanel>
 
-    <!-- Row 1: Search/Sort/Import/Export -->
+
     <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
       <TextBox x:Name="SearchBox" Width="200" Margin="0,0,10,0"/>
       <Button Content="Search" Click="Search_Click" Margin="0,0,10,0"/>
@@ -46,7 +46,7 @@
       <Button Content="Export…" Click="Export_Click"/>
     </StackPanel>
 
-    <!-- Row 2: Borrow/Return -->
+
     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,10">
       <StackPanel Orientation="Vertical" Margin="0,0,10,0">
         <TextBlock Text="Movie ID" FontWeight="Bold"/>
@@ -60,7 +60,6 @@
       <Button Content="Return" Click="Return_Click" Width="75"/>
     </StackPanel>
 
-    <!-- Row 3: Movie list -->
     <DataGrid x:Name="MoviesGrid"
               Grid.Row="3"
               AutoGenerateColumns="False"

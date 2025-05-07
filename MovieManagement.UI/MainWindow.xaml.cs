@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -79,20 +81,84 @@ namespace MovieManagement.UI
 
         private void Import_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new OpenFileDialog { Filter = "JSON Files|*.json" };
+            var dlg = new OpenFileDialog
+            {
+                Filter = "JSON Files (*.json)|*.json"
+            };
+
             if (dlg.ShowDialog() == true)
             {
-                _manager.ImportFromJson(dlg.FileName);
-                RefreshGrid();
+                try
+                {
+                    _manager.ImportFromJson(dlg.FileName);
+                    RefreshGrid();
+                    MessageBox.Show(
+                        "Movies imported successfully.",
+                        "Import Complete",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+                catch (FileNotFoundException ex)
+                {
+                    MessageBox.Show(
+                        ex.Message,
+                        "Import Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
+                catch (JsonException ex)
+                {
+                    MessageBox.Show(
+                        $"Invalid JSON format:\n{ex.Message}",
+                        "Import Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error importing movies:\n{ex.Message}",
+                        "Import Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
             }
         }
 
+
         private void Export_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog { Filter = "JSON Files|*.json" };
+            var dlg = new SaveFileDialog
+            {
+                Filter = "JSON Files (*.json)|*.json",
+                FileName = "movies.json"
+            };
+
             if (dlg.ShowDialog() == true)
             {
-                _manager.ExportToJson(dlg.FileName);
+                try
+                {
+                    _manager.ExportToJson(dlg.FileName);
+                    MessageBox.Show(
+                        "Movies exported successfully.",
+                        "Export Complete",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error exporting movies:\n{ex.Message}",
+                        "Export Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
             }
         }
 
@@ -115,14 +181,13 @@ namespace MovieManagement.UI
             BorrowUserBox.Clear();
         }
 
-        // This method centralizes the return logic for both button click and Enter key.
         private void HandleReturn(string movieId)
         {
-            // Lookup the movie so we can show its Title
+
             var movie = _manager.SearchByID(movieId)
                         ?? throw new KeyNotFoundException($"Movie with ID '{movieId}' not found.");
 
-            // Now carry on using `movie` instead of raw id…
+
             var nextUser = _borrower.ReturnMovie(movieId);
             RefreshGrid();
 
@@ -147,7 +212,7 @@ namespace MovieManagement.UI
         }
 
 
-        // Wire this up in XAML: KeyDown="MoviesGrid_KeyDown"
+
         private void MoviesGrid_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return && MoviesGrid.SelectedItem is Movie selected)
@@ -158,7 +223,6 @@ namespace MovieManagement.UI
 
         private void Return_Click(object sender, RoutedEventArgs e)
         {
-            // 1) Determine which Movie ID to use:
             var movieId = BorrowIdBox.Text.Trim();
             if (string.IsNullOrEmpty(movieId))
             {
@@ -178,10 +242,8 @@ namespace MovieManagement.UI
                 }
             }
 
-            // 2) Call the shared logic
             HandleReturn(movieId);
 
-            // 3) Clear the input box
             BorrowIdBox.Clear();
             BorrowUserBox.Clear();
         }
