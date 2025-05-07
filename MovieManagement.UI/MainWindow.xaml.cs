@@ -125,15 +125,43 @@ namespace MovieManagement.UI
 
             try
             {
-                _borrower.ReturnMovie(movieId);
+                // Call the updated ReturnMovie which returns the next waiting user (if any)
+                var nextUser = _borrower.ReturnMovie(movieId);
                 RefreshGrid();
+
+                if (nextUser != null)
+                {
+                    MessageBox.Show(
+                        $"Movie '{movieId}' has been auto-assigned to {nextUser.Name}.",
+                        "Movie Reassigned",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Movie '{movieId}' has been returned and is now available.",
+                        "Movie Returned",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                MessageBox.Show($"Movie '{movieId}' not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
             }
 
+            // Clear inputs
             BorrowIdBox.Clear();
+            BorrowUserBox.Clear();
         }
+
     }
 }
