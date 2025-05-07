@@ -107,11 +107,10 @@ namespace MovieManagement.UI
                 _borrower.BorrowMovie(movieId, user);
                 RefreshGrid();
             }
-            catch (KeyNotFoundException)
-            {
-                MessageBox.Show($"Movie '{movieId}' not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
+        catch (KeyNotFoundException)
+        {
+            MessageBox.Show($"Movie '{movieId}' not found.");
+        }
             BorrowIdBox.Clear();
             BorrowUserBox.Clear();
         }
@@ -119,40 +118,34 @@ namespace MovieManagement.UI
         // This method centralizes the return logic for both button click and Enter key.
         private void HandleReturn(string movieId)
         {
-            try
-            {
-                var nextUser = _borrower.ReturnMovie(movieId);
-                RefreshGrid();
+            // Lookup the movie so we can show its Title
+            var movie = _manager.SearchByID(movieId)
+                        ?? throw new KeyNotFoundException($"Movie with ID '{movieId}' not found.");
 
-                if (nextUser != null)
-                {
-                    MessageBox.Show(
-                        $"Movie '{movieId}' has been auto-assigned to {nextUser.Name}.",
-                        "Movie Reassigned",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information
-                    );
-                }
-                else
-                {
-                    MessageBox.Show(
-                        $"Movie '{movieId}' has been returned and is now available.",
-                        "Movie Returned",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information
-                    );
-                }
-            }
-            catch (KeyNotFoundException ex)
+            // Now carry on using `movie` instead of raw id…
+            var nextUser = _borrower.ReturnMovie(movieId);
+            RefreshGrid();
+
+            if (nextUser != null)
             {
                 MessageBox.Show(
-                    ex.Message,
-                    "Error",
+                    $"\"{movie.Title}\" has been auto-borrowed to {nextUser.Name}.",
+                    "Movie Reassigned",
                     MessageBoxButton.OK,
-                    MessageBoxImage.Error
+                    MessageBoxImage.Information
+                );
+            }
+            else
+            {
+                MessageBox.Show(
+                    $"\"{movie.Title}\" has been returned and is now available.",
+                    "Movie Returned",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
                 );
             }
         }
+
 
         // Wire this up in XAML: KeyDown="MoviesGrid_KeyDown"
         private void MoviesGrid_KeyDown(object sender, KeyEventArgs e)
