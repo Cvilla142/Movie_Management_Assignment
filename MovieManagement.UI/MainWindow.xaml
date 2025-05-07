@@ -38,8 +38,19 @@
 
 
     <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
-      <TextBox x:Name="SearchBox" Width="200" Margin="0,0,10,0"/>
-      <Button Content="Search" Click="Search_Click" Margin="0,0,10,0"/>
+    <ComboBox x:Name="SearchTypeBox"
+              Width="80"
+              SelectedIndex="0"
+              Margin="0,0,10,0">
+      <ComboBoxItem Content="Title"/>
+      <ComboBoxItem Content="ID"/>
+    </ComboBox>
+    <TextBox   x:Name="SearchBox"
+               Width="200"
+               Margin="0,0,10,0"/>
+    <Button    Content="Search"
+               Click="Search_Click"
+               Margin="0,0,10,0"/>
       <Button Content="Sort Title" Click="SortTitle_Click" Margin="0,0,10,0"/>
       <Button Content="Sort Year" Click="SortYear_Click" Margin="0,0,10,0"/>
       <Button Content="Import…" Click="Import_Click" Margin="0,0,10,0"/>

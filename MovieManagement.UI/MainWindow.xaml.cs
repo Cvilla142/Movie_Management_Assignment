@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using MovieManagement.Core;
@@ -64,7 +65,24 @@ namespace MovieManagement.UI
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            MoviesGrid.ItemsSource = _manager.SearchByTitle(SearchBox.Text.Trim());
+
+            var query = SearchBox.Text.Trim();
+            var selectedItem = SearchTypeBox.SelectedItem as ComboBoxItem;
+            var mode = selectedItem?.Content?.ToString();
+
+            if (mode == "ID")
+            {
+                var movie = _manager.SearchByID(query);
+
+                MoviesGrid.ItemsSource = movie != null
+                    ? new List<Movie> { movie }
+                    : new List<Movie>();
+            }
+            else
+            {
+                var results = _manager.SearchByTitle(query);
+                MoviesGrid.ItemsSource = results;
+            }
         }
 
         private void SortTitle_Click(object sender, RoutedEventArgs e)
