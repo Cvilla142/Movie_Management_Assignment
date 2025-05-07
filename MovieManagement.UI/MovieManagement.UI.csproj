@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieManagement.Core\MovieManagement.Core.csproj" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 
   <PropertyGroup>

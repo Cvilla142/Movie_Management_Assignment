@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Collections.Generic;
 
@@ -85,26 +86,27 @@ public class MovieManager
         return null;
     }
 
-    public void ExportToJson(string filepath)
+    public void ExportToJson(string filePath)
     {
 
-        var exportModel = _movies.Select(m => new
-        {
-        m.MovieId,
-        m.Title,
-        m.Director,
-        m.Genre,
-        m.ReleaseYear,
-        m.IsAvailable,
-        WaitingQueue = _waitingLists.ContainsKey(m.MovieId)
-            ? _waitingLists[m.MovieId].Select(u => u.UserId).ToList()
-            : new List<string>()
-        }).ToList();
+        var exportList = _movies
+            .Select(m => new
+            {
+                m.MovieId,
+                m.Title,
+                m.Director,
+                m.Genre,
+                m.ReleaseYear,
+                m.IsAvailable,
+                WaitingQueue = _waitingLists[m.MovieId].Select(u => u.UserId).ToList()
+            })
+            .ToList();
 
-        var options = new JsonSerializerOptions { WriteIndented = true };  
-        string json = JsonSerializer.Serialize(exportModel, options);
 
-        File.WriteAllText(filepath, json);
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(exportList, options);
+
+        File.WriteAllText(filePath, json);
     }
 
     public void ImportFromJson(string filePath)
@@ -112,13 +114,12 @@ public class MovieManager
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Import file not found: {filePath}");
 
+
         string json = File.ReadAllText(filePath);
 
         var imported = JsonSerializer.Deserialize<List<ImportModel>>(json);
         if (imported == null)
-        {
             imported = new List<ImportModel>();
-        }
 
 
         _movies.Clear();
@@ -126,33 +127,29 @@ public class MovieManager
         _waitingLists.Clear();
 
 
-        foreach (var entry in imported)
+        foreach (var item in imported)
         {
-
+            // Create movie object
             var mv = new Movie(
-                entry.MovieId,
-                entry.Title,
-                entry.Director,
-                entry.Genre,
-                entry.ReleaseYear
+                item.MovieId,
+                item.Title,
+                item.Director,
+                item.Genre,
+                item.ReleaseYear
             )
             {
-                IsAvailable = entry.IsAvailable
+                IsAvailable = item.IsAvailable
             };
 
 
             AddMovie(mv);
 
-
-            foreach (var userId in entry.WaitingQueue)
+            foreach (var uid in item.WaitingQueue)
             {
-                _waitingLists[mv.MovieId].Enqueue(
-                    new User(userId, userId, DateTime.MinValue)
-                );
+                _waitingLists[mv.MovieId].Enqueue(new User(uid, uid, DateTime.MinValue));
             }
         }
     }
-
 
     private class ImportModel
     {

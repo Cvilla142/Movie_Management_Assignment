@@ -33,23 +33,24 @@ namespace MovieManagement.Core
             }
         }
 
-        public void ReturnMovie(string movieId)
+        public User? ReturnMovie(string movieId)
         {
-            var movie = _movieManager.SearchByID(movieId);
-            if (movie == null)
-                throw new KeyNotFoundException($"Movie with ID '{movieId} not found.");
+            var movie = _movieManager.SearchByID(movieId)
+                        ?? throw new KeyNotFoundException($"Movie with ID '{movieId}' not found.");
 
-            User? nextUser = _movieManager.DequeueNextWaitingUser(movieId);
 
+            var nextUser = _movieManager.DequeueNextWaitingUser(movieId);
             if (nextUser != null)
             {
-                Console.WriteLine($"Movie '{movie.Title}' is now borrowed by next user in queue: {nextUser.Name}.");
-                // Still marked as unavailable because it goes to next user
+
+                movie.IsAvailable = false;
+                return nextUser;
             }
             else
             {
+
                 movie.IsAvailable = true;
-                Console.WriteLine($"Movie '{movie.Title}' has been returned and is now available.");
+                return null;
             }
         }
     }
