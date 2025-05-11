@@ -1,0 +1,97 @@
+[
+  {
+    "MovieId": "M1",
+    "Title": "Inception",
+    "Director": "Christopher Nolan",
+    "Genre": "Sci-Fi",
+    "ReleaseYear": 2010,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M2",
+    "Title": "The Matrix",
+    "Director": "Lana Wachowski",
+    "Genre": "Sci-Fi"
+  },
+  {
+    "MovieId": "M3",
+    "Title": "Interstellar",
+    "Director": "Christopher Nolan",
+    "Genre": "Sci-Fi",
+    "ReleaseYear": 2014,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M4",
+    "Title": "The Godfather",
+    "Director": "Francis Ford Coppola",
+    "Genre": "Crime",
+    "ReleaseYear": 1972,
+    "IsAvailable": false,
+    "WaitingQueue": [
+      "U2",
+      "U3"
+    ]
+  },
+  {
+    "MovieId": "M5",
+    "Title": "Pulp Fiction",
+    "Director": "Quentin Tarantino",
+    "Genre": "Crime",
+    "ReleaseYear": 1994,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M6",
+    "Title": "The Shawshank Redemption",
+    "Director": "Frank Darabont",
+    "Genre": "Drama",
+    "ReleaseYear": 1994,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M7",
+    "Title": "The Dark Knight",
+    "Director": "Christopher Nolan",
+    "Genre": "Action",
+    "ReleaseYear": 2008,
+    "IsAvailable": false,
+    "WaitingQueue": [
+      "U4"
+    ]
+  },
+  {
+    "MovieId": "M8",
+    "Title": "Fight Club",
+    "Director": "David Fincher",
+    "Genre": "Drama",
+    "ReleaseYear": 1999,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M9",
+    "Title": "Forrest Gump",
+    "Director": "Robert Zemeckis",
+    "Genre": "Drama",
+    "ReleaseYear": 1994,
+    "IsAvailable": true,
+    "WaitingQueue": []
+  },
+  {
+    "MovieId": "M10",
+    "Title": "The Lord of the Rings: The Fellowship of the Ring",
+    "Director": "Peter Jackson",
+    "Genre": "Fantasy",
+    "ReleaseYear": 2001,
+    "IsAvailable": false,
+    "WaitingQueue": [
+      "U5",
+      "U6"
+    ]
+  }
+]
