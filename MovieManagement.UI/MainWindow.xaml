@@ -75,7 +75,7 @@
               Grid.Row="3"
               AutoGenerateColumns="False"
               IsReadOnly="True"
-              KeyDown="MoviesGrid_KeyDown">
+              PreviewKeyDown="MoviesGrid_PreviewKeyDown">
       <DataGrid.Columns>
         <DataGridTextColumn Header="ID"        Binding="{Binding MovieId}"      Width="80"/>
         <DataGridTextColumn Header="Title"     Binding="{Binding Title}"        Width="*"/>

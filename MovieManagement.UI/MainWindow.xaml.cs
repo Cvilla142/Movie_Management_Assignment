@@ -184,17 +184,36 @@ namespace MovieManagement.UI
         {
             var movieId = BorrowIdBox.Text.Trim();
             var userId  = BorrowUserBox.Text.Trim();
-            var user    = new User(userId, userId, DateTime.Now);
+
+            if (_manager.SearchByID(movieId) is null)
+            {
+                MessageBox.Show(
+                    "Movie ID not found. Please make sure it’s correct (case‐sensitive).",
+                    "Invalid Movie ID",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
+                return;
+            }
+
+            var user = new User(userId, userId, DateTime.Now);
 
             try
             {
                 _borrower.BorrowMovie(movieId, user);
                 RefreshGrid();
             }
-        catch (KeyNotFoundException)
-        {
-            MessageBox.Show($"Movie '{movieId}' not found.");
-        }
+            catch (KeyNotFoundException)
+            {
+
+                MessageBox.Show(
+                    $"Movie '{movieId}' not found.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+
             BorrowIdBox.Clear();
             BorrowUserBox.Clear();
         }
@@ -241,30 +260,53 @@ namespace MovieManagement.UI
 
         private void Return_Click(object sender, RoutedEventArgs e)
         {
-            var movieId = BorrowIdBox.Text.Trim();
-            if (string.IsNullOrEmpty(movieId))
+            var rawId = BorrowIdBox.Text.Trim();
+            string movieId;
+
+            if (!string.IsNullOrEmpty(rawId))
             {
-                if (MoviesGrid.SelectedItem is Movie sel)
-                {
-                    movieId = sel.MovieId;
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "Please select a movie in the list or type its ID.",
-                        "No Movie Selected",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning
-                    );
-                    return;
-                }
+                movieId = rawId;
             }
-
+            else if (MoviesGrid.SelectedItem is Movie sel)
+            {
+                movieId = sel.MovieId;
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Please select a movie from the list or enter its ID.",
+                    "No Movie Selected",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
+                return;
+            }
+            if (_manager.SearchByID(movieId) is null)
+            {
+                MessageBox.Show(
+                    $"Movie ID '{movieId}' not found. Please make sure it’s correct.",
+                    "Invalid Movie ID",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
+                return;
+            }
             HandleReturn(movieId);
-
+            
             BorrowIdBox.Clear();
             BorrowUserBox.Clear();
         }
 
+
+
+            private void MoviesGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && MoviesGrid.SelectedItem is Movie selected)
+            {
+                HandleReturn(selected.MovieId);
+
+                e.Handled = true;
+            }
+        }
     }
 }
