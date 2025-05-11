@@ -17,7 +17,7 @@ namespace MovieManagement.Core
             var movie = _movieManager.SearchByID(movieId);
             if (movie == null)
             {
-                throw new KeyNotFoundException("Movie not found.");
+                throw new KeyNotFoundException($"Sorry {movieId} is not found.");
             }
 
             if (movie.IsAvailable)
