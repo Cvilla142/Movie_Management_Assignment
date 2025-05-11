@@ -114,22 +114,16 @@ public class MovieManager
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Import file not found: {filePath}");
 
-
-        string json = File.ReadAllText(filePath);
-
-        var imported = JsonSerializer.Deserialize<List<ImportModel>>(json);
-        if (imported == null)
-            imported = new List<ImportModel>();
-
+        var json = File.ReadAllText(filePath);
+        var imported = JsonSerializer.Deserialize<List<ImportModel>>(json)
+                    ?? new List<ImportModel>();
 
         _movies.Clear();
         _movieLookup.Clear();
         _waitingLists.Clear();
 
-
         foreach (var item in imported)
         {
-            // Create movie object
             var mv = new Movie(
                 item.MovieId,
                 item.Title,
@@ -141,7 +135,6 @@ public class MovieManager
                 IsAvailable = item.IsAvailable
             };
 
-
             AddMovie(mv);
 
             foreach (var uid in item.WaitingQueue)
@@ -151,16 +144,16 @@ public class MovieManager
         }
     }
 
-    private class ImportModel
-    {
-        public string MovieId     { get; set; } = "";
-        public string Title       { get; set; } = "";
-        public string Director    { get; set; } = "";
-        public string Genre       { get; set; } = "";
-        public int    ReleaseYear { get; set; }
-        public bool   IsAvailable { get; set; }
-        public List<string> WaitingQueue { get; set; } = new();
-    }
+        private class ImportModel
+        {
+            public string MovieId     { get; set; } = "";
+            public string Title       { get; set; } = "";
+            public string Director    { get; set; } = "";
+            public string Genre       { get; set; } = "";
+            public int    ReleaseYear { get; set; }
+            public bool   IsAvailable { get; set; }
+            public List<string> WaitingQueue { get; set; } = new();
+        }
 
     public IEnumerable<Movie> GetAllMovies()
     {

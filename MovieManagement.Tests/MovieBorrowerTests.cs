@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 using MovieManagement.Core;
 
@@ -11,15 +12,13 @@ namespace MovieManagement.Tests
             var manager = new MovieManager();
             var movie = new Movie
             {
-                MovieId = "M1",
-                Title = "Somethings Here",
-                Director = "Dr Schahul",
-                Genre = "Genre",
-                ReleaseYear = 2020
-                
+                MovieId     = "M1",
+                Title       = "Somethings Here",
+                Director    = "Dr Schahul",
+                Genre       = "Genre",
+                ReleaseYear = 2020,
+                IsAvailable = true
             };
-
-
             manager.AddMovie(movie);
 
             var borrower = new MovieBorrower(manager);
@@ -33,28 +32,29 @@ namespace MovieManagement.Tests
         [Fact]
         public void BorrowMovie_WhenNotAvailable_EnqueuesUser()
         {
+
             var manager = new MovieManager();
             var movie = new Movie
             {
-                MovieId = "I1",
-                Title = "Somethings not",
-                Director = "Dr Schahul",
-                Genre = "Genre",
-                ReleaseYear = 2020
+                MovieId     = "I1",
+                Title       = "Somethings not",
+                Director    = "Dr Schahul",
+                Genre       = "Genre",
+                ReleaseYear = 2020,
+                IsAvailable = true
             };
-        manager.AddMovie(movie);
-        
-        var borrower = new MovieBorrower(manager);
-        var firstUser = new User("A2", "Christian", DateTime.Now);
-        borrower.BorrowMovie("I1", firstUser);
+            manager.AddMovie(movie);
 
-        var secondUser = new User("U2", "Ethan", DateTime.Now);
+            var borrower = new MovieBorrower(manager);
+            var firstUser = new User("A2", "Christian", DateTime.Now);
+            borrower.BorrowMovie("I1", firstUser);
 
-        borrower.BorrowMovie("I1", secondUser);
+            var secondUser = new User("U2", "Ethan", DateTime.Now);
 
-        var next = manager.DequeueNextWaitingUser("I1");
-        Assert.Equal ("U2", next?.UserId);
+            borrower.BorrowMovie("I1", secondUser);
 
+            var next = manager.DequeueNextWaitingUser("I1");
+            Assert.Equal("U2", next?.UserId);
         }
 
         [Fact]
@@ -67,7 +67,8 @@ namespace MovieManagement.Tests
                 Title       = "Back for blood",
                 Director    = "Christian",
                 Genre       = "Action",
-                ReleaseYear = 2021
+                ReleaseYear = 2021,
+                IsAvailable = true
             };
             manager.AddMovie(movie);
 
@@ -78,37 +79,37 @@ namespace MovieManagement.Tests
             borrower.BorrowMovie("L7", userA);
             borrower.BorrowMovie("L7", userB);
 
-
             borrower.ReturnMovie("L7");
 
             Assert.False(movie.IsAvailable);
-
-            Assert.Null(manager.DequeueNextWaitingUser("L1"));
+            Assert.Null(manager.DequeueNextWaitingUser("L7"));
         }
 
         [Fact]
-            public void ReturnMovie_WhenQueueNotEmpty_MarksAvailable()
+        public void ReturnMovie_WhenQueueEmpty_MarksAvailable()
+        {
+
+            var manager = new MovieManager();
+            var movie = new Movie
             {
-                var manager = new MovieManager();
-                var movie = new Movie
-                {
-                    MovieId     = "L7",
-                    Title       = "Back for blood",
-                    Director    = "Christian",
-                    Genre       = "Action",
-                    ReleaseYear = 2021
-                };
+                MovieId     = "L7",
+                Title       = "Back for blood",
+                Director    = "Christian",
+                Genre       = "Action",
+                ReleaseYear = 2021,
+                IsAvailable = true
+            };
+            manager.AddMovie(movie);
 
-                manager.AddMovie(movie);
+            var borrower = new MovieBorrower(manager);
+            var user = new User("I1", "Kenton", DateTime.Now);
 
-                var borrower = new MovieBorrower(manager);
-                var user = new User("I1", "Kenton", DateTime.Now);
 
-                borrower.BorrowMovie("L7", user);
+            borrower.BorrowMovie("L7", user);
+            borrower.ReturnMovie("L7");
 
-                borrower.ReturnMovie("L7");
 
-                Assert.True(movie.IsAvailable);
-            }
+            Assert.True(movie.IsAvailable);
+        }
     }
 }
